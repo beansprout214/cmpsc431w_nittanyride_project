@@ -1,7 +1,14 @@
 import { useState } from 'react'
 import LoginPage from './pages/LoginPage'
-import WelcomePage from './pages/WelcomePage'
+import WelcomePage, {type WelcomePageProps} from './pages/WelcomePage'
 
 export default function App() {
-  return <LoginPage />
+  const [user, setUser] = useState<WelcomePageProps | null>(
+  null)
+
+  if (user === null) {
+    return <LoginPage onLogin= {setUser}/>
+  }
+
+  return <WelcomePage firstName={user.firstName} role={user.role}/>
 }
