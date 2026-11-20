@@ -6,10 +6,7 @@ import DriverPage from './pages/DriverPage'
 import SupportStaffPage from './pages/SupportStaffPage'
 
 export default function App() {
-  const [user, setUser] = useState<UserPageProps | null>({
-    firstName: 'Ryan',
-    role: 'Support Staff'
-  }
+  const [user, setUser] = useState<UserPageProps | null>(null
   )
 
   if (user === null) {
@@ -21,6 +18,6 @@ export default function App() {
   if (user.role === 'Driver') {
     return <DriverPage {...user}/>
   }
-  // formatRole() Does checks for role validity so this structure is okay. 
+  // formatRole() in LoginPage.tsx checks for role validity so this structure isn't as dumb as it looks. 
   return <SupportStaffPage {...user}/>
 }
