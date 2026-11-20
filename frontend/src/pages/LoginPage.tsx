@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import type { WelcomePageProps } from './WelcomePage'
+import type { UserPageProps } from '../types'
 import '../App.css'
 import logo from '../assets/nittanyride-logo.png'
 
 type LoginPageProps = {
-    onLogin: (user: WelcomePageProps) => void
+    onLogin: (user: UserPageProps) => void
 }
 
-function formatRole(role:string): WelcomePageProps['role'] | null {
+function formatRole(role:string): UserPageProps['role'] | null {
     if (role === 'rider') {
         return 'Rider'
     }

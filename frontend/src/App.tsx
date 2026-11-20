@@ -1,14 +1,26 @@
 import { useState } from 'react'
 import LoginPage from './pages/LoginPage'
-import WelcomePage, {type WelcomePageProps} from './pages/WelcomePage'
+import RiderPage from './pages/RiderPage'
+import type { UserPageProps } from './types'
+import DriverPage from './pages/DriverPage'
+import SupportStaffPage from './pages/SupportStaffPage'
 
 export default function App() {
-  const [user, setUser] = useState<WelcomePageProps | null>(
-  null)
+  const [user, setUser] = useState<UserPageProps | null>({
+    firstName: 'Ryan',
+    role: 'Support Staff'
+  }
+  )
 
   if (user === null) {
     return <LoginPage onLogin= {setUser}/>
   }
-
-  return <WelcomePage firstName={user.firstName} role={user.role}/>
+  if (user.role === 'Rider') {
+    return <RiderPage {...user}/>
+  }
+  if (user.role === 'Driver') {
+    return <DriverPage {...user}/>
+  }
+  // formatRole() Does checks for role validity so this structure is okay. 
+  return <SupportStaffPage {...user}/>
 }

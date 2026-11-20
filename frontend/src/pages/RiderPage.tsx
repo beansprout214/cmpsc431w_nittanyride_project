@@ -1,22 +1,18 @@
 import { useState } from 'react'
+import type { UserPageProps } from '../types'
 
-
-export type WelcomePageProps = {
-    firstName: string
-    role: 'Rider' | 'Driver' | 'Support Staff'
-}
 
 type Ride = {
     id:number
-    origin: string
-    destination: string
+    description: string
+    fareRate: number
 }
 const sampleRides: Ride[] = [
-    { id: 1, origin: 'Altoona', destination: 'State College' },
-    { id: 2, origin: 'State College', destination: 'Pittsburgh' },
+    { id: 1, description: 'Airport shuttle from campus', fareRate: 12 },
+    { id: 2, description: 'Evening ride to downtown State College', fareRate: 8 },
 ]
 
-export default function WelcomePage({ firstName, role }: WelcomePageProps) {
+export default function WelcomePage({ firstName, role }: UserPageProps) {
     const [searchMethod, setSearchMethod] = useState('')
     const [results, setResults] = useState<Ride[]>([])
 
@@ -31,26 +27,26 @@ export default function WelcomePage({ firstName, role }: WelcomePageProps) {
                     <form onSubmit={(event) => {
                         event.preventDefault()
                         const formData = new FormData(event.currentTarget)
-                        const destination = String(formData.get('destination') ?? "").trim()
+                        const keyword = String(formData.get('keyword') ?? "").trim()
 
-                        if (destination === '') {
+                        if (keyword === '') {
                             setResults([])
                             setSearchMethod("Enter Destination")
                             return
                         }
                         const matches = sampleRides.filter((ride) => {
-                            return ride.destination.toLowerCase() === destination.toLowerCase()
+                            return ride.description.toLowerCase().includes(keyword.toLowerCase())
                         })
 
                         setResults(matches)
 
                         if (matches.length === 0 ) {
-                            setSearchMethod(`No rides found to ${destination}`)
+                            setSearchMethod(`No rides found for ${keyword}`)
                         } else{
                             setSearchMethod(`Rides found: ${matches.length } `)                       }
                     }}>
-                        <label htmlFor = "destination">Where are you going?</label>
-                        <input id="destination" name="destination" type="text"/>
+                        <label htmlFor = "keyword">Where are you going?</label>
+                        <input id="keyword" name="keyword" type="text"/>
                         <button type = "submit">Search rides</button>
                     </form>
                     <p role="status">{searchMethod}</p>
@@ -58,7 +54,7 @@ export default function WelcomePage({ firstName, role }: WelcomePageProps) {
                         <ul>
                             {results.map((ride) => (
                                 <li key={ride.id}>
-                                    {ride.origin} {'->'} {ride.destination}
+                                    {ride.description} - ${ride.fareRate.toFixed(2)}
                                 </li>
                             ))}
                         </ul>
