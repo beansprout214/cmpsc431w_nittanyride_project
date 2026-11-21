@@ -1,7 +1,7 @@
 import sqlite3
 
 # Create the database
-connection = sqlite3.connect('nittanyride.db')
+connection = sqlite3.connect('nittanyRide.db')
 
 # Cursur for later use
 cursor = connection.cursor()
@@ -14,6 +14,9 @@ cursor.execute("DROP TABLE IF EXISTS Home_Address")
 cursor.execute("DROP TABLE IF EXISTS Payment_Information")
 cursor.execute("DROP TABLE IF EXISTS Vehicle_Information")
 cursor.execute("DROP TABLE IF EXISTS Ride_Type_Application")
+cursor.execute("DROP TABLE IF EXISTS Categories")
+cursor.execute("DROP TABLE IF EXISTS Ride_Offerings")
+cursor.execute("DROP TABLE IF EXISTS Ride_Requests")
 
 
 # Need to enable foreign key support in sqlite
@@ -42,7 +45,6 @@ with open('csv_files/user.csv', 'r') as userFile:
   for row in userFile:
     cursor.execute("INSERT INTO User (email_address, password, first_name, last_name, phone_number) VALUES (?,?,?,?,?)", row.rstrip("\n").split(","))
     connection.commit()
-print("")
 
 userExec = cursor.execute("SELECT * FROM User").fetchall()
 for i in userExec:
@@ -68,7 +70,6 @@ with open('csv_files/rider.csv', 'r') as riderFile:
   for row in riderFile:
     cursor.execute("INSERT INTO Rider (rider_email_address, rider_type) VALUES (?,?)", row.rstrip("\n").split(","))
     connection.commit()
-print("")
 
 riderExec = cursor.execute("SELECT * FROM Rider").fetchall()
 for i in riderExec:
@@ -96,7 +97,6 @@ with open('csv_files/driver.csv', 'r') as driverFile:
   for row in driverFile:
     cursor.execute("INSERT INTO Driver (driver_email_address, availability, rating) VALUES (?,?,?)", row.rstrip("\n").split(","))
     connection.commit()
-print("")
 
 driverExec = cursor.execute("SELECT * FROM Driver").fetchall()
 for i in driverExec:
@@ -123,7 +123,6 @@ with open('csv_files/support_staff.csv', 'r') as supportFile:
   for row in supportFile:
     cursor.execute("INSERT INTO Support_Staff (support_email_address, position) VALUES (?,?)", row.rstrip("\n").split(","))
     connection.commit()
-print("")
 
 supportExec = cursor.execute("SELECT * FROM Support_Staff").fetchall()
 for i in supportExec:
@@ -153,7 +152,6 @@ with open('csv_files/home_address.csv', 'r') as addrsFile:
   for row in addrsFile:
     cursor.execute("INSERT INTO Home_Address (account_email_address, street, city, state, zip_code) VALUES (?,?,?,?,?)", row.rstrip("\n").split(","))
     connection.commit()
-print("")
 
 addrsExec = cursor.execute("SELECT * FROM Home_Address").fetchall()
 for i in addrsExec:
@@ -184,7 +182,6 @@ with open('csv_files/payment_information.csv', 'r') as payFile:
   for row in payFile:
     cursor.execute("INSERT INTO Payment_Information (card_ID, rider_email_address, card_type, card_number, expiration_date, security_code) VALUES (?,?,?,?,?,?)", row.rstrip("\n").split(","))
     connection.commit()
-print("")
 
 payExec = cursor.execute("SELECT * FROM Payment_Information").fetchall()
 for i in payExec:
@@ -216,7 +213,6 @@ with open('csv_files/vehicle_information.csv', 'r') as vFile:
   for row in vFile:
     cursor.execute("INSERT INTO Vehicle_Information (vehicle_ID, driver_email_address, make, model, color, year, license_plate_number) VALUES (?,?,?,?,?,?,?)", row.rstrip("\n").split(","))
     connection.commit()
-print("")
 
 vExec = cursor.execute("SELECT * FROM Vehicle_Information").fetchall()
 for i in vExec:
@@ -251,7 +247,6 @@ with open('csv_files/ride_type_application.csv', 'r') as rideappFile:
   for row in rideappFile:
     cursor.execute("INSERT INTO Ride_Type_Application (application_ID, driver_email_address, support_email_address, date, category, fare_rate, reason, description, application_status) VALUES (?,?,?,?,?,?,?,?,?)", row.rstrip("\n").split(","))
     connection.commit()
-print("")
 
 rideappExec = cursor.execute("SELECT * FROM Ride_Type_Application").fetchall()
 for i in rideappExec:
@@ -271,6 +266,16 @@ except Exception as e:
   print(e)
   connection.rollback()
   connection.close()
+
+print("\nCategories Table: ")
+with open('csv_files/categories.csv', 'r') as categoryFile:
+  for row in categoryFile:
+    cursor.execute("INSERT INTO Categories (category_ID, category_name) VALUES (?,?)", row.rstrip("\n").split(","))
+    connection.commit()
+
+categoryExec = cursor.execute("SELECT * FROM Categories").fetchall()
+for i in categoryExec:
+  print(i)
 
 
 # Ride Offering table
@@ -296,6 +301,15 @@ except Exception as e:
   connection.rollback()
   connection.close()
 
+print("\nRide Offerings Table: ")
+with open('csv_files/ride_offerings.csv', 'r') as offeringFile:
+  for row in offeringFile:
+    cursor.execute("INSERT INTO Ride_Offerings (ride_offering_ID, driver_email_address, vehicle_ID, category_ID, description, availability, fare_rate, seat_capacity) VALUES (?,?,?,?,?,?,?,?)", row.rstrip("\n").split(","))
+    connection.commit()
+
+offeringExec = cursor.execute("SELECT * FROM Ride_Offerings").fetchall()
+for i in offeringExec:
+  print(i)
 
 # Ride Request table
 ride_request_table = """
@@ -317,3 +331,13 @@ except Exception as e:
   print(e)
   connection.rollback()
   connection.close()
+
+print("\nRide Requests Table: ")
+with open('csv_files/ride_requests.csv', 'r') as requestFile:
+  for row in requestFile:
+    cursor.execute("INSERT INTO Ride_Requests (ride_request_ID, rider_email_address, ride_offering_ID, date, number_seats, status, total_price) VALUES (?,?,?,?,?,?,?)", row.rstrip("\n").split(","))
+    connection.commit()
+
+requestsExec = cursor.execute("SELECT * FROM Ride_Requests").fetchall()
+for i in requestsExec:
+  print(i)
