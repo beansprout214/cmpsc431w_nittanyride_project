@@ -31,7 +31,7 @@ except Exception as e:
   connection.close()
 
 print("User Table: \n")
-with open('Test_Code/user.csv', 'r') as userFile:
+with open('user.csv', 'r') as userFile:
   for row in userFile:
     cursor.execute("INSERT INTO User (email_address, password, first_name, last_name, phone_number) VALUES (?,?,?,?,?)", row.rstrip("\n").split(","))
     connection.commit()
