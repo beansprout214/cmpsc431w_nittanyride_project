@@ -1,7 +1,7 @@
 import sqlite3
 
 # Create the database
-connection = sqlite3.connect('nittanyRide.db')
+connection = sqlite3.connect('nittanyride.db')
 
 # Cursur for later use
 cursor = connection.cursor()
